@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { headerHeight } from '../../consts/theme';
-import { useScreenSize } from '../../contexts/screenSizeContext';
 
 const HeaderWrapper = styled.header<{ $headerHeight: number }>`
   position: relative;
@@ -17,7 +16,6 @@ const HeaderWrapper = styled.header<{ $headerHeight: number }>`
 `;
 
 const Header: React.FC = () => {
-  //   const { screenSize } = useScreenSize();
   return <HeaderWrapper $headerHeight={headerHeight}></HeaderWrapper>;
 };
 
