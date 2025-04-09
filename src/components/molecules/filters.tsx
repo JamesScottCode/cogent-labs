@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Search from '../atoms/search';
 import { ScreenSize, useScreenSize } from '../../contexts/screenSizeContext';
-import Slider from '../atoms/slider';
 import { usePlacesStore } from '../../stores/placesStore';
+import Search from '../atoms/search';
+import SortOptions from '../atoms/sort';
+import Slider from '../atoms/slider';
 
 const Container = styled.div<{ $screenSize: ScreenSize }>`
   display: flex;
@@ -20,6 +21,7 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
         : 'auto'};
 `;
 
+// TODO(BUG): If at end of a list, then sort, fetches new list, but will be at bottom of scroll, so lots of loads
 const Filters: React.FC = () => {
   const { radius, setRadius, limit, fetchPlaces } = usePlacesStore();
   const [searchText, setSearchText] = useState('');
@@ -45,6 +47,8 @@ const Filters: React.FC = () => {
         onSubmit={handleSubmit}
         placeholder="Search..."
       />
+
+      <SortOptions />
 
       <Slider
         value={radius}
