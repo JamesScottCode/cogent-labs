@@ -1,10 +1,11 @@
 import { defaultCoordinates } from '../consts/map';
 import { FoursquarePlacesResponse } from '../types/places';
 import { createLL } from '../utils/geo';
+import { fsqFields } from '../consts/foursquare';
 
 const { latitude, longitude } = defaultCoordinates;
 const latLong = createLL(latitude, longitude);
-const API_URL_TESTING = `https://api.foursquare.com/v3/places/search?ll=${latLong}`;
+const API_URL_TESTING = `https://api.foursquare.com/v3/places/search?ll=${latLong}&fields=${fsqFields}`;
 
 export async function fetchPlaces(): Promise<FoursquarePlacesResponse> {
   const response = await fetch(API_URL_TESTING, {

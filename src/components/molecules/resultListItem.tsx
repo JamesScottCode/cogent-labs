@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { usePlacesStore } from '../../stores/placesStore';
 import { Category, Place } from '../../types/places';
+import Hours from '../atoms/hours';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -119,6 +120,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
 
   const { address } = location;
   const photo = true;
+
   return (
     <OuterContainer
       data-testid="result-list-item"
@@ -148,7 +150,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
                   <span key={index}>tag </span>
                 ))}
             </TagRow>
-            {hours && <span>hours placeholder</span>}
+            {hours && <Hours hours={hours} />}
           </Details>
         </DetailsRow>
       </InnerContainer>
