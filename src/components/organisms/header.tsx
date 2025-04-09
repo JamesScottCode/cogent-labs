@@ -4,6 +4,7 @@ import { headerHeight } from '../../consts/theme';
 import { useScreenSize } from '../../contexts/screenSizeContext';
 import Filters from '../molecules/filters';
 import ThemedButton from '../atoms/button';
+import { useModalStore } from '../../stores/layoutStore';
 
 const HeaderWrapper = styled.header<{ $headerHeight: number }>`
   position: relative;
@@ -40,6 +41,7 @@ const Header: React.FC<{ title?: string }> = ({
   title = 'Restaurant Finder',
 }) => {
   const { screenSize } = useScreenSize();
+  const { openModal } = useModalStore();
 
   return (
     <HeaderWrapper $headerHeight={headerHeight}>
@@ -52,7 +54,9 @@ const Header: React.FC<{ title?: string }> = ({
         <CenterSearchWrapper>
           <ThemedButton
             text="Filters"
-            onClick={() => console.log('TODO: Open Modal')}
+            onClick={() =>
+              openModal(<div>TODO// Modal Test</div>, 'TITLE TEST')
+            }
           ></ThemedButton>
         </CenterSearchWrapper>
       ) : (

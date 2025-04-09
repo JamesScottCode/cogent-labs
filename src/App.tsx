@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import AppProviders from './contexts/providers';
 import Home from './components/pages/home';
 import { usePlacesStore } from './stores/placesStore';
+import ModalContainer from './components/organisms/modal';
 
 export const AppContainer = styled.div`
   background: ${({ theme }) => theme.background || '#ffffff'};
@@ -21,6 +22,7 @@ const App: FC = () => {
   return (
     <AppProviders>
       <AppContainer>
+        <ModalContainer />
         <Home />
       </AppContainer>
     </AppProviders>
