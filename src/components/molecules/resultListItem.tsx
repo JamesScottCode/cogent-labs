@@ -15,7 +15,10 @@ const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   z-index: ${(props) => (props.$isToolTip ? 8000 : 'auto')};
 `;
 
-const InnerContainer = styled.div<{ $isHovered: boolean }>`
+const InnerContainer = styled.div<{
+  $isHovered: boolean;
+  $selectedRestaurant?: Place;
+}>`
   box-sizing: border-box;
   border: ${({ $isHovered, theme }) =>
     $isHovered ? `1px solid ${theme.highlight || '#000000'}` : 'none'};
@@ -38,7 +41,8 @@ const InnerContainer = styled.div<{ $isHovered: boolean }>`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     cursor: pointer;
     pointer-events: auto;
-    transform: scale(1.03);
+    transform: ${({ $isHovered }) =>
+      $isHovered ? `scale(1.01)` : 'scale(1.03)'};
     z-index: 2;
   }
 `;

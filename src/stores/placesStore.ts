@@ -9,9 +9,11 @@ interface PlacesStore {
   fetchPlaces: () => Promise<void>;
   hoveredRestaurantId: string;
   setHoveredRestaurantId: (hoveredRestaurantId: string) => void;
+  selectedRestaurant: Place | null;
+  setSelectedRestaurant: (id: string | null) => Promise<void>;
 }
 
-export const usePlacesStore = create<PlacesStore>((set) => ({
+export const usePlacesStore = create<PlacesStore>((set, get) => ({
   error: null,
   fetchPlaces: async () => {
     set({ loading: true, error: null });
@@ -25,6 +27,13 @@ export const usePlacesStore = create<PlacesStore>((set) => ({
   hoveredRestaurantId: '',
   loading: false,
   restaurants: [],
+  selectedRestaurant: null,
+  setSelectedRestaurant: async (id: string | null) => {
+    const { restaurants } = get();
+    const selectedRestaurant =
+      restaurants.find((restaurant: Place) => restaurant.fsq_id === id) || null;
+    set({ selectedRestaurant });
+  },
   setHoveredRestaurantId: (hoveredRestaurantId: string) =>
     set({ hoveredRestaurantId }),
 }));

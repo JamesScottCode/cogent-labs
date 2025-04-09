@@ -1,16 +1,12 @@
 import React, { useRef, useMemo } from 'react';
-import Map, {
-  NavigationControl,
-  Source,
-  Layer,
-  Marker,
-} from 'react-map-gl/maplibre';
+import Map, { NavigationControl, Source, Layer } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as turf from '@turf/turf';
 import styled, { useTheme } from 'styled-components';
 import { usePlacesStore } from '../../stores/placesStore';
 import { defaultCoordinates } from '../../consts/map';
 import { Place } from '../../types/places';
+import HoverableMarker from '../atoms/hoverableMarker';
 
 const Container = styled.div`
   border-radius: 8px;
@@ -80,21 +76,13 @@ const InteractiveMap: React.FC = () => {
         </Source>
 
         {restaurants?.map((restaurant: Place, index: number) => {
-          const lat = restaurant.geocodes.main.latitude;
-          const lon = restaurant.geocodes.main.longitude;
-
           return (
-            <Marker latitude={lat} longitude={lon} key={restaurant.fsq_id}>
-              <div
-                style={{
-                  background: 'red',
-                  borderRadius: '50%',
-                  height: 10,
-                  width: 10,
-                }}
-              />
-              {index}
-            </Marker>
+            <HoverableMarker
+              key={restaurant.fsq_id}
+              mapRef={mapRef}
+              restaurant={restaurant}
+              showCategory={false} // TODO: Add switch for this
+            />
           );
         })}
       </Map>
