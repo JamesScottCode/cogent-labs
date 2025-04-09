@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { headerHeight } from '../../consts/theme';
 import { useScreenSize } from '../../contexts/screenSizeContext';
-import { useHeaderContext } from '../../contexts/headerContext';
 import Filters from '../molecules/filters';
 import ThemedButton from '../atoms/button';
 
@@ -37,9 +36,10 @@ const Logo = styled.img`
   height: 45px;
 `;
 
-const Header: React.FC = () => {
+const Header: React.FC<{ title?: string }> = ({
+  title = 'Restaurant Finder',
+}) => {
   const { screenSize } = useScreenSize();
-  const { title } = useHeaderContext();
 
   return (
     <HeaderWrapper $headerHeight={headerHeight}>
