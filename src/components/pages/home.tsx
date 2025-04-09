@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Header from '../molecules/header';
+import RestaurantExplorer from '../templates/restaurantExplorer';
 
 export const HomeContainer = styled.div`
   background: ${({ theme }) => theme.background || '#ffffff'};
@@ -12,6 +13,7 @@ const Home: React.FC = () => {
   return (
     <HomeContainer>
       <Header />
+      <RestaurantExplorer />
     </HomeContainer>
   );
 };

@@ -8,6 +8,7 @@
 - [Development](#development)
 - [Docker](#docker)
 - [Linting & Formatting](#linting--formatting)
+- [Architecture](#packages)
 
 ## Installation
 
@@ -62,3 +63,29 @@ This project uses ESLint and Prettier to enforce code quality and formatting.
   npm run format
 
 _Note:_ If you encounter peer dependency conflicts with npm, use the `--legacy-peer-deps` flag as shown in the installation section.
+
+## Packages
+
+### Zustand
+
+I find zustand boilerplate to be more minimalist than redux boilerplate. It's easier to pick up than redux and allows for hook-based usage opposed to HOC. By default, zustand uses selectors and avoids re-renders by default. For most applications it offers plenty, but for very large applications, by the nature of flexibility, it can become disorganized if the code is not structured and reviewed well.
+
+### React Map GL and Maplibre (with )
+
+react-map-gl and maplibre
+
+### Turf
+
+(for the cricle)
+
+## API
+
+### Maptiler
+
+[https://www.maptiler.com/news/2022/03/japanese-maps-just-got-way-better/](Maptiler Japanese Specific Map)
+
+### Foursquare API
+
+It was suggested in the PDF document, so I figured they wanted candidates to use this specifically if they could.
+
+It does not use traditional pagination, so it requires a little bit of a setup for this kind of behavior.

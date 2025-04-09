@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import { fetchPlaces as apiFetchPlaces } from '../actions/placesApi';
-import { FoursquarePlacesResponse } from '../types/places';
+import { Place } from '../types/places';
 
 interface PlacesStore {
-  places: FoursquarePlacesResponse | null;
+  restaurants: Place[];
   loading: boolean;
   error: string | null;
   fetchPlaces: () => Promise<void>;
 }
 
 export const usePlacesStore = create<PlacesStore>((set) => ({
+  restaurants: [],
   places: null,
   loading: false,
   error: null,
@@ -17,7 +18,7 @@ export const usePlacesStore = create<PlacesStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const data = await apiFetchPlaces();
-      set({ places: data, loading: false });
+      set({ restaurants: data.results, loading: false });
     } catch (error: any) {
       set({ error: error.message || 'error occurred', loading: false });
     }
