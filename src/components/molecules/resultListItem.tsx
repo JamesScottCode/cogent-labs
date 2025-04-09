@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { usePlacesStore } from '../../stores/placesStore';
 import { Category, Place } from '../../types/places';
 import Hours from '../atoms/hours';
+import Tag from '../atoms/tag';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -147,7 +148,11 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
               {!isTooltip &&
                 categories?.length &&
                 categories.map((category: Category, index: number) => (
-                  <span key={index}>tag </span>
+                  // <span key={index}>tag </span>
+                  <Tag
+                    key={`${category?.id}-${index}`}
+                    label={category?.short_name}
+                  />
                 ))}
             </TagRow>
             {hours && <Hours hours={hours} />}
