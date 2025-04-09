@@ -148,7 +148,6 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
               {!isTooltip &&
                 categories?.length &&
                 categories.map((category: Category, index: number) => (
-                  // <span key={index}>tag </span>
                   <Tag
                     key={`${category?.id}-${index}`}
                     label={category?.short_name}
