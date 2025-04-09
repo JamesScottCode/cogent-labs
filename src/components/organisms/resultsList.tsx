@@ -51,14 +51,14 @@ const ResultsList: React.FC = () => {
     selectedRestaurant,
     nextCursor,
     fetchPlaces,
+    limit,
   } = usePlacesStore();
 
   const selectedRestaurantId = selectedRestaurant?.fsq_id;
 
   // TODO: Remove hardcoded items here
-  const query = '';
-  const ll = createLL(latitude, longitude);
-  const limit = 10;
+  const query = ''; // TODO: Implement query with search text and/or category select
+  const ll = createLL(latitude, longitude); // TODO: Make a movable marker for locations... for now just leave at cogent labs coords
 
   // Memoize search parameters for change detection.
   const searchParams = useMemo(
@@ -72,9 +72,9 @@ const ResultsList: React.FC = () => {
   // on mount, fetch initial results if empty.
   useEffect(() => {
     if (restaurants.length === 0) {
-      fetchPlaces(query, limit);
+      fetchPlaces(query);
     }
-  }, [fetchPlaces, query, limit, restaurants.length]);
+  }, [fetchPlaces, query, restaurants.length]);
 
   // when search parameters change, scroll the container to the top.
   useEffect(() => {
@@ -105,7 +105,6 @@ const ResultsList: React.FC = () => {
       (entries) => {
         if (entries[0].isIntersecting && nextCursor && !loading) {
           fetchPlaces(query, limit, nextCursor);
-          console.log('Fetching next page of results');
         }
       },
       { root: null, rootMargin: '0px', threshold: 0.1 },

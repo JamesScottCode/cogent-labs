@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Search from '../atoms/search';
 import { ScreenSize, useScreenSize } from '../../contexts/screenSizeContext';
+import Slider from '../atoms/slider';
+import { usePlacesStore } from '../../stores/placesStore';
 
 const Container = styled.div<{ $screenSize: ScreenSize }>`
   display: flex;
@@ -19,11 +21,17 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
 `;
 
 const Filters: React.FC = () => {
+  const { radius, setRadius, limit, fetchPlaces } = usePlacesStore();
   const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
 
   const handleSubmit = () => {
-    console.log({ searchText }); //TODO: Add functionality
+    console.log('TODO: handle submit ');
+  };
+
+  const onSliderFinished = () => {
+    const query = searchText ?? 'restaurant';
+    fetchPlaces(query, limit);
   };
 
   return (
@@ -36,6 +44,12 @@ const Filters: React.FC = () => {
         }}
         onSubmit={handleSubmit}
         placeholder="Search..."
+      />
+
+      <Slider
+        value={radius}
+        onChange={setRadius}
+        onFinished={onSliderFinished}
       />
     </Container>
   );
