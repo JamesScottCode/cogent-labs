@@ -3,12 +3,38 @@ import { FoursquarePlacesResponse } from '../types/places';
 import { createLL } from '../utils/geo';
 import { fsqFields } from '../consts/foursquare';
 
-const { latitude, longitude } = defaultCoordinates;
-const latLong = createLL(latitude, longitude);
-const API_URL_TESTING = `https://api.foursquare.com/v3/places/search?ll=${latLong}&fields=${fsqFields}`;
+export async function fetchPlaces(
+  query: string,
+  limit = 10,
+  radius?: number,
+  cursor?: string,
+  sort?: string,
+): Promise<{
+  results: FoursquarePlacesResponse['results'];
+  nextCursor?: string;
+}> {
+  const { latitude, longitude } = defaultCoordinates;
+  const ll = createLL(latitude, longitude);
 
-export async function fetchPlaces(): Promise<FoursquarePlacesResponse> {
-  const response = await fetch(API_URL_TESTING, {
+  const params: Record<string, string> = {
+    query,
+    ll,
+    limit: String(limit),
+  };
+  if (radius) {
+    params.radius = String(radius);
+  }
+  if (cursor) {
+    params.cursor = cursor;
+  }
+  if (sort) {
+    params.sort = sort;
+  }
+
+  const queryString = new URLSearchParams(params).toString();
+  const API_URL = `https://api.foursquare.com/v3/places/search?${queryString}&fields=${fsqFields}`;
+
+  const response = await fetch(API_URL, {
     headers: {
       Authorization: process.env.REACT_APP_FOURSQUARE_API_KEY || '',
       Accept: 'application/json',
@@ -16,8 +42,19 @@ export async function fetchPlaces(): Promise<FoursquarePlacesResponse> {
   });
 
   if (!response.ok) {
-    throw new Error('not ok');
+    throw new Error('Failed to fetch places');
   }
 
-  return response.json() as Promise<FoursquarePlacesResponse>;
+  const data = (await response.json()) as FoursquarePlacesResponse;
+
+  let nextCursor: string | undefined;
+  const linkHeader = response.headers.get('link');
+  if (linkHeader) {
+    const match = linkHeader.match(/cursor=([^&>]+)/);
+    if (match) {
+      nextCursor = match[1];
+    }
+  }
+
+  return { results: data.results, nextCursor };
 }

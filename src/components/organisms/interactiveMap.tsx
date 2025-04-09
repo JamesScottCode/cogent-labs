@@ -17,7 +17,7 @@ const Container = styled.div`
 `;
 
 const InteractiveMap: React.FC = () => {
-  const { restaurants } = usePlacesStore();
+  const { radius, restaurants } = usePlacesStore();
   const mapRef = useRef<any>(null);
 
   const { latitude, longitude } = defaultCoordinates;
@@ -32,11 +32,10 @@ const InteractiveMap: React.FC = () => {
   const circleGeoJson = useMemo(() => {
     const center = [longitude, latitude];
 
-    const radius = 500; // TODO: replace with store/slider
     const radiusInKm = radius / 1000;
     const options = { steps: 64, units: 'kilometers' as turf.Units };
     return turf.circle(center, radiusInKm, options);
-  }, [latitude, longitude]);
+  }, [latitude, longitude, radius]);
 
   return (
     <Container>

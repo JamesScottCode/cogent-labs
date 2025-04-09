@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { useScreenSize, ScreenSize } from '../../contexts/screenSizeContext';
 import { usePlacesStore } from '../../stores/placesStore';
 import ResultListItem from '../molecules/resultListItem';
+import { createLL } from '../../utils/geo';
+import { defaultCoordinates } from '../../consts/map';
+import Spinner from '../atoms/spinner';
+
+const { latitude, longitude } = defaultCoordinates;
 
 const Container = styled.div`
   border-radius: 8px;
@@ -31,11 +36,93 @@ const ItemsContainer = styled.div<{ $screenSize: ScreenSize }>`
     itemsContainerColumnNum($screenSize)};
 `;
 
+// Sentinel element for triggering next page load.
+const Sentinel = styled.div`
+  height: 1px;
+`;
+
 const ResultsList: React.FC = () => {
   const { screenSize } = useScreenSize();
-  const { restaurants, loading, error } = usePlacesStore();
+  const {
+    radius,
+    restaurants,
+    loading,
+    error,
+    selectedRestaurant,
+    nextCursor,
+    fetchPlaces,
+  } = usePlacesStore();
+
+  const selectedRestaurantId = selectedRestaurant?.fsq_id;
+
+  // TODO: Remove hardcoded items here
+  const query = '';
+  const ll = createLL(latitude, longitude);
+  const limit = 10;
+
+  // Memoize search parameters for change detection.
+  const searchParams = useMemo(
+    () => ({ query, ll, radius }),
+    [query, ll, radius],
+  );
+  const prevSearchParams = useRef(searchParams);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // on mount, fetch initial results if empty.
+  useEffect(() => {
+    if (restaurants.length === 0) {
+      fetchPlaces(query, limit);
+    }
+  }, [fetchPlaces, query, limit, restaurants.length]);
+
+  // when search parameters change, scroll the container to the top.
+  useEffect(() => {
+    if (
+      prevSearchParams.current.query !== searchParams.query ||
+      prevSearchParams.current.ll !== searchParams.ll ||
+      prevSearchParams.current.radius !== searchParams.radius
+    ) {
+      containerRef.current?.scrollTo(0, 0);
+    }
+    prevSearchParams.current = searchParams;
+  }, [searchParams]);
+
+  // when a map marker is clicked, scroll the corresponding list item into view.
+  useEffect(() => {
+    if (selectedRestaurantId) {
+      const element = document.getElementById(selectedRestaurantId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [selectedRestaurantId]);
+
+  // intersection observer to load more results when scrolling.
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && nextCursor && !loading) {
+          fetchPlaces(query, limit, nextCursor);
+          console.log('Fetching next page of results');
+        }
+      },
+      { root: null, rootMargin: '0px', threshold: 0.1 },
+    );
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+    return () => {
+      if (sentinelRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observer.unobserve(sentinelRef.current);
+      }
+    };
+  }, [nextCursor, loading, fetchPlaces, query, limit]);
+
   return (
-    <Container>
+    <Container ref={containerRef}>
       <ItemsContainer $screenSize={screenSize}>
         {restaurants.map((restaurant) => (
           <ResultListItem
@@ -45,8 +132,9 @@ const ResultsList: React.FC = () => {
           />
         ))}
       </ItemsContainer>
-      {loading && <div>TODO: Loader</div>}
+      {loading && <Spinner />}
       {error && <div>Error loading restaurants: {error}</div>}
+      <Sentinel ref={sentinelRef} data-testid="sentinel" />
     </Container>
   );
 };
