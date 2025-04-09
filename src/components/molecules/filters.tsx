@@ -23,12 +23,13 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
 
 // TODO(BUG): If at end of a list, then sort, fetches new list, but will be at bottom of scroll, so lots of loads
 const Filters: React.FC = () => {
-  const { radius, setRadius, limit, fetchPlaces } = usePlacesStore();
+  const { sort, radius, setRadius, limit, fetchPlaces } = usePlacesStore();
   const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
 
   const handleSubmit = () => {
-    console.log('TODO: handle submit ');
+    const query = searchText ?? 'restaurant';
+    fetchPlaces(query, limit, undefined, sort);
   };
 
   const onSliderFinished = () => {

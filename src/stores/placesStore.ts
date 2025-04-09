@@ -9,6 +9,10 @@ interface CurrentSearch {
 }
 
 interface PlacesStore {
+  sort: string;
+  setSort: (sort: string) => void;
+  query: string;
+  setQuery: (query: string) => void;
   limit: number;
   radius: number;
   setRadius: (radius: number) => void;
@@ -30,6 +34,10 @@ interface PlacesStore {
 }
 
 export const usePlacesStore = create<PlacesStore>((set, get) => ({
+  sort: 'relevance',
+  setSort: (sort: string) => set({ sort }),
+  query: 'restaurant',
+  setQuery: (query: string) => set({ query }),
   limit: 10,
   radius: 1000,
   setRadius: (radius: number) => set({ radius }),
