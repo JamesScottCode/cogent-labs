@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../molecules/header';
+import Header from '../organisms/header';
 import RestaurantExplorer from '../templates/restaurantExplorer';
 
 export const HomeContainer = styled.div`
