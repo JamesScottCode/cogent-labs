@@ -120,10 +120,11 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
     price,
     hours,
     closed_bucket,
+    photos,
   } = data;
 
   const { address } = location;
-  const photo = true;
+  const photo = photos[0];
 
   return (
     <OuterContainer
@@ -143,7 +144,16 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
           {rating && <StarRating rating={rating} />}
         </TitleRow>
         <DetailsRow>
-          {photo && <Photo key={''} src={'https://picsum.photos/200'} />}
+          {photo && (
+            <Photo
+              key={photo?.prefix ?? ''}
+              src={
+                photo
+                  ? `${photo.prefix}100x100${photo.suffix}`
+                  : 'no_img_available.png'
+              }
+            />
+          )}
           <Details>
             {distance && <DetailText>{distance}m</DetailText>}
             {price && <DetailText>{getPriceText(price)}</DetailText>}
