@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import { usePlacesStore } from '../../stores/placesStore';
 
@@ -21,7 +21,7 @@ const StyledSortSelect = styled.select`
   outline: none;
 `;
 
-const SortOptions: React.FC = () => {
+const SortOptions: FC = () => {
   const { currentSearch, fetchPlaces } = usePlacesStore();
   const sortOptions = [
     { value: 'relevance', label: 'Relevance' },
@@ -31,7 +31,6 @@ const SortOptions: React.FC = () => {
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = e.target.value;
-    console.log('handleSortChange', selectedSort);
     if (currentSearch) {
       fetchPlaces(currentSearch.query, 10, undefined, selectedSort);
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import { usePlacesStore } from '../../stores/placesStore';
 import { Category, Place } from '../../types/places';
@@ -6,6 +6,8 @@ import Hours from '../atoms/hours';
 import Tag from '../atoms/tag';
 import StarRating from '../atoms/starRating';
 import OpenStatus from '../atoms/openStatus';
+import ItemDetails from '../organisms/itemDetails';
+import { useModalStore } from '../../stores/layoutStore';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -108,12 +110,10 @@ interface ResultListItemProps {
   isTooltip?: boolean;
 }
 
-const ResultListItem: React.FC<ResultListItemProps> = ({
-  data,
-  isTooltip,
-  id,
-}) => {
-  const { hoveredRestaurantId, setHoveredRestaurantId } = usePlacesStore();
+const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
+  const { openModal } = useModalStore();
+  const { hoveredRestaurantId, setHoveredRestaurantId, setSelectedRestaurant } =
+    usePlacesStore();
   const {
     categories = [],
     distance,
@@ -130,10 +130,16 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
   const { address } = location;
   const photo = photos[0];
 
+  const handleOpenModal = () => {
+    setSelectedRestaurant(fsq_id);
+    openModal(<ItemDetails />);
+  };
+
   return (
     <OuterContainer
       data-testid="result-list-item"
       $isToolTip={Boolean(isTooltip)}
+      onClick={handleOpenModal}
       onMouseEnter={() => setHoveredRestaurantId(fsq_id)}
       onMouseLeave={() => setHoveredRestaurantId('')}
       id={id}

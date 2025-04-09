@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { ScreenSize, useScreenSize } from '../../contexts/screenSizeContext';
 import { usePlacesStore } from '../../stores/placesStore';
@@ -22,7 +22,7 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
 `;
 
 // TODO(BUG): If at end of a list, then sort, fetches new list, but will be at bottom of scroll, so lots of loads
-const Filters: React.FC = () => {
+const Filters: FC = () => {
   const { sort, radius, setRadius, limit, fetchPlaces } = usePlacesStore();
   const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
@@ -42,7 +42,6 @@ const Filters: React.FC = () => {
       <Search
         value={searchText}
         onChange={(e) => {
-          console.log(e.target.value);
           setSearchText(e.target.value);
         }}
         onSubmit={handleSubmit}

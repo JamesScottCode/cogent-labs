@@ -64,7 +64,6 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
         cursor,
         sort,
       );
-      console.log({ results });
       // Determine if this is a continuation of the same search (pagination)
       const isSameSearch =
         currentSearch &&
@@ -72,7 +71,6 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
         currentSearch.radius === radius &&
         currentSearch.sort === sort;
       const shouldAppend = Boolean(cursor && isSameSearch);
-      console.log({ shouldAppend });
 
       if (shouldAppend) {
         set({

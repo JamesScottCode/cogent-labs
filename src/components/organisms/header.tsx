@@ -54,9 +54,7 @@ const Header: React.FC<{ title?: string }> = ({
         <CenterSearchWrapper>
           <ThemedButton
             text="Filters"
-            onClick={() =>
-              openModal(<div>TODO// Modal Test</div>, 'TITLE TEST')
-            }
+            onClick={() => openModal(<Filters />, 'Filters')}
           ></ThemedButton>
         </CenterSearchWrapper>
       ) : (
