@@ -5,6 +5,7 @@ import { Category, Place } from '../../types/places';
 import Hours from '../atoms/hours';
 import Tag from '../atoms/tag';
 import StarRating from '../atoms/starRating';
+import OpenStatus from '../atoms/openStatus';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -118,6 +119,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
     rating,
     price,
     hours,
+    closed_bucket,
   } = data;
 
   const { address } = location;
@@ -134,7 +136,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
       <InnerContainer $isHovered={hoveredRestaurantId === fsq_id}>
         <TitleRow>
           <Title>{name ?? 'unnamed'}</Title>
-          <span>Open status</span>
+          <OpenStatus closedBucket={closed_bucket} />
         </TitleRow>
         <TitleRow>
           {address && <Address>{address}</Address>}
