@@ -4,6 +4,7 @@ import { usePlacesStore } from '../../stores/placesStore';
 import { Category, Place } from '../../types/places';
 import Hours from '../atoms/hours';
 import Tag from '../atoms/tag';
+import StarRating from '../atoms/starRating';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -137,7 +138,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({
         </TitleRow>
         <TitleRow>
           {address && <Address>{address}</Address>}
-          {rating && <span>rating here</span>}
+          {rating && <StarRating rating={rating} />}
         </TitleRow>
         <DetailsRow>
           {photo && <Photo key={''} src={'https://picsum.photos/200'} />}
