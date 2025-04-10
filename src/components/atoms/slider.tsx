@@ -98,7 +98,7 @@ const Text = styled.span<{ $screenSize: ScreenSize }>`
 const Slider: React.FC<SliderProps> = ({
   min = 100,
   max = 1500,
-  step = 10,
+  step = 50,
   value,
   onChange,
   onFinished,

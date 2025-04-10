@@ -11,7 +11,6 @@ const ButtonContainer = styled.button`
   display: inline-flex;
   font-size: 1rem;
   justify-content: center;
-  margin-left: 5px;
   padding: 0.5rem 1rem;
 `;
 

@@ -4,11 +4,10 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 0.75rem;
 `;
 
 const Text = styled.span`
-  font-size: 0.6rem;
+  font-size: 0.75em;
   font-style: italic;
 `;
 

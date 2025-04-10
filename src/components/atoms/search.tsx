@@ -10,11 +10,9 @@ const Container = styled.div`
   padding: 0.5rem;
   max-width: 400px;
   height: 20px;
-  margin-left: 20px;
 `;
 
 const Icon = styled.svg`
-  margin-right: 0.5rem;
   width: 1rem;
   height: 1rem;
   stroke: ${({ theme }) => theme.highlight || '#000'};

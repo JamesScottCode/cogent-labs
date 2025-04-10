@@ -11,8 +11,9 @@ interface ClockedBucketTextProps {
 
 const ClockedBucketText = styled.span<ClockedBucketTextProps>`
   color: ${(props) => props.color || fallbackInfo.color};
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
 `;
 
 interface ClosedBucketInfo {

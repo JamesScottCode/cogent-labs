@@ -2,9 +2,12 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { ScreenSize, useScreenSize } from '../../contexts/screenSizeContext';
 import { usePlacesStore } from '../../stores/placesStore';
+import Slider from '../atoms/slider';
 import Search from '../atoms/search';
 import SortOptions from '../atoms/sort';
-import Slider from '../atoms/slider';
+import ThemedButton from '../atoms/button';
+import { useModalStore } from '../../stores/layoutStore';
+import ItemDetails from '../organisms/itemDetails';
 
 const Container = styled.div<{ $screenSize: ScreenSize }>`
   display: flex;
@@ -23,7 +26,9 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
 
 // TODO(BUG): If at end of a list, then sort, fetches new list, but will be at bottom of scroll, so lots of loads
 const Filters: FC = () => {
-  const { sort, radius, setRadius, limit, fetchPlaces } = usePlacesStore();
+  const { getRandomRestaurant, sort, radius, setRadius, limit, fetchPlaces } =
+    usePlacesStore();
+  const { openModal } = useModalStore();
   const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
 
@@ -37,6 +42,14 @@ const Filters: FC = () => {
     fetchPlaces(query, limit);
   };
 
+  const handleGetRandomRestaurant = async () => {
+    console.log('handleGetRandomRestaurant');
+    const restaurant = await getRandomRestaurant();
+    if (restaurant) {
+      openModal(<ItemDetails />);
+    }
+  };
+
   return (
     <Container $screenSize={screenSize}>
       <Search
@@ -47,9 +60,8 @@ const Filters: FC = () => {
         onSubmit={handleSubmit}
         placeholder="Search..."
       />
-
       <SortOptions />
-
+      <ThemedButton onClick={handleGetRandomRestaurant} text="Random" />
       <Slider
         value={radius}
         onChange={setRadius}

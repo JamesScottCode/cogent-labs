@@ -23,14 +23,16 @@ const InnerContainer = styled.div<{
 }>`
   box-sizing: border-box;
   border: ${({ $isHovered, theme }) =>
-    $isHovered ? `1px solid ${theme.highlight || '#000000'}` : 'none'};
+    $isHovered
+      ? `2px solid ${theme.highlight || '#000000'}`
+      : '2px solid rgb(201, 201, 201)'};
   border-radius: 10px;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   height: 100%;
   left: 0;
-  padding: 20px;
+  padding: 10px;
   position: absolute;
   top: 0;
   transition:
@@ -58,29 +60,39 @@ const TitleRow = styled.div`
 
 const Title = styled.span`
   color: ${({ theme }) => theme.highlight || '#000000'};
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Address = styled.span`
   color: ${({ theme }) => theme.font || '#000000'};
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-align: left;
 `;
 
 const Photo = styled.img`
   border-radius: 10px;
-  height: 100px;
+  height: 150px;
   margin-top: 10px;
   object-fit: cover;
-  width: 100px;
+  width: 150px;
   z-index: 1;
 `;
 
 const DetailsRow = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const Details = styled.div`
@@ -92,7 +104,7 @@ const Details = styled.div`
 `;
 
 const DetailText = styled.span`
-  font-size: 0.8rem;
+  font-size: clamp(0.8em, 1em, 1.5em);
 `;
 
 const TagRow = styled.div`
@@ -100,6 +112,11 @@ const TagRow = styled.div`
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 5px;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const getPriceText = (price: number) => '\u00A5 '.repeat(Math.max(price, 0));
@@ -153,7 +170,39 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
           {address && <Address>{address}</Address>}
           {rating && <StarRating rating={rating} />}
         </TitleRow>
-        <DetailsRow>
+        <Row>
+          <Column>
+            {photo && (
+              <Photo
+                key={photo?.prefix ?? ''}
+                src={
+                  photo
+                    ? `${photo.prefix}100x100${photo.suffix}`
+                    : 'no_img_available.png'
+                }
+              />
+            )}
+          </Column>
+
+          <Column>
+            <Details>
+              {distance && <DetailText>{distance}m</DetailText>}
+              {price && <DetailText>{getPriceText(price)}</DetailText>}
+              <TagRow>
+                {!isTooltip &&
+                  categories?.length &&
+                  categories.map((category: Category, index: number) => (
+                    <Tag
+                      key={`${category?.id}-${index}`}
+                      label={category?.short_name}
+                    />
+                  ))}
+              </TagRow>
+              {hours && <Hours hours={hours} />}
+            </Details>
+          </Column>
+        </Row>
+        {/* <DetailsRow>
           {photo && (
             <Photo
               key={photo?.prefix ?? ''}
@@ -179,7 +228,7 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
             </TagRow>
             {hours && <Hours hours={hours} />}
           </Details>
-        </DetailsRow>
+        </DetailsRow> */}
       </InnerContainer>
     </OuterContainer>
   );

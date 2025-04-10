@@ -7,6 +7,7 @@ import Hours from '../atoms/hours';
 import Carousel from '../molecules/carousel';
 import Reviews from '../molecules/reviews';
 import Socials from '../molecules/socials';
+import StaticMap from '../molecules/staticMap';
 
 const Container = styled.div`
   display: flex;
@@ -52,8 +53,21 @@ const ItemDetails: FC = () => {
 
   if (!selectedRestaurant) return <Spinner />;
 
-  const { hours, menu, name, tel, photos, social_media, tips, website } =
-    selectedRestaurant;
+  const {
+    distance,
+    geocodes,
+    hours,
+    menu,
+    name,
+    tel,
+    photos,
+    social_media,
+    tips,
+    website,
+  } = selectedRestaurant;
+
+  const { main } = geocodes;
+  const { latitude, longitude } = main;
 
   const { facebook_id, instagram, twitter } = social_media;
 
@@ -72,6 +86,13 @@ const ItemDetails: FC = () => {
     <Container>
       <Row $align="center">
         <Title>{name}</Title>
+      </Row>
+      <Row>
+        <StaticMap
+          distance={distance}
+          latitude={latitude}
+          longitude={longitude}
+        />
       </Row>
       {is_local_holiday ||
         (open_now && (

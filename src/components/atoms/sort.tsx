@@ -8,7 +8,6 @@ const SortContainer = styled.div`
   background-color: ${({ theme }) => theme.background || '#fff'};
   border: 1px solid ${({ theme }) => theme.highlight || '#ccc'};
   border-radius: 8px;
-  margin-left: 20px;
   padding: 0.5rem;
   width: auto;
 `;

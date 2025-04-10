@@ -30,7 +30,7 @@ const getInitialScreenSize = (): ScreenSize => {
   if (typeof window !== 'undefined') {
     const width = window.innerWidth;
     if (width < 600) return 'mobile';
-    if (width < 1024) return 'tablet';
+    if (width < 1025) return 'tablet'; // 1025 instead of 1024 for ipad pro
     if (width < 2560) return 'desktop';
     if (width < 3840) return 'desktop2k';
     return 'desktop4k';

@@ -9,6 +9,8 @@ import { Place } from '../../types/places';
 import HoverableMarker from '../atoms/hoverableMarker';
 import ToggleSwitch from '../atoms/toggleSwitch';
 
+const { latitude, longitude } = defaultCoordinates;
+
 const Container = styled.div`
   border-radius: 8px;
   height: 100%;
@@ -23,18 +25,16 @@ const ToggleContainer = styled.div`
   z-index: 10;
 `;
 
+const mapStyle = process.env.REACT_APP_MAPTILER_API_KEY
+  ? `https://api.maptiler.com/maps/jp-mierune-streets/style.json?key=${process.env.REACT_APP_MAPTILER_API_KEY}`
+  : 'https://demotiles.maplibre.org/style.json';
+
 const InteractiveMap: FC = () => {
   const [showCategories, setShowCategories] = useState(false);
   const { radius, restaurants } = usePlacesStore();
   const mapRef = useRef<any>(null);
 
-  const { latitude, longitude } = defaultCoordinates;
-
   const theme = useTheme();
-
-  const mapStyle = process.env.REACT_APP_MAPTILER_API_KEY
-    ? `https://api.maptiler.com/maps/jp-mierune-streets/style.json?key=${process.env.REACT_APP_MAPTILER_API_KEY}`
-    : 'https://demotiles.maplibre.org/style.json';
 
   // The map circle
   const circleGeoJson = useMemo(() => {

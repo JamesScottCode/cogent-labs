@@ -21,6 +21,7 @@ interface PlacesStore {
   error: string | null;
   nextCursor: string | null;
   currentSearch?: CurrentSearch;
+  getRandomRestaurant: () => Promise<Place | null>;
   fetchPlaces: (
     query?: string,
     limit?: number,
@@ -48,6 +49,33 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
   currentSearch: undefined,
   hoveredRestaurantId: '',
   selectedRestaurant: null,
+  getRandomRestaurant: async () => {
+    set({ loading: true, error: null });
+    try {
+      const { radius } = get();
+      const { results } = await apiFetchPlaces(
+        'restaurant',
+        50,
+        radius,
+        undefined,
+      );
+
+      if (!results.length) {
+        set({ loading: false });
+        return null;
+      }
+
+      const random = results[Math.floor(Math.random() * results.length)];
+      set({
+        selectedRestaurant: random,
+        loading: false,
+      });
+      return random;
+    } catch (error: any) {
+      set({ error: error.message || 'error occurred', loading: false });
+      return null;
+    }
+  },
   fetchPlaces: async (
     query = 'restaurant', // Default query if none is provided
     limit = 10,
