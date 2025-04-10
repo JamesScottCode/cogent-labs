@@ -92,15 +92,17 @@ _Note:_ If you encounter peer dependency conflicts with npm, use the `--legacy-p
 
 ### Zustand
 
-I find zustand boilerplate to be more minimalist than redux boilerplate. It's easier to pick up than redux and allows for hook-based usage opposed to HOC. By default, zustand uses selectors and avoids re-renders by default. For most applications it offers plenty, but for very large applications, by the nature of flexibility, it can become disorganized if the code is not structured and reviewed well.
+I find [zustand](https://zustand.docs.pmnd.rs/getting-started/introduction) boilerplate to be more minimalist than redux boilerplate. It's easier to pick up than redux and allows for hook-based usage opposed to HOC. By default, zustand uses selectors and avoids re-renders by default. For most applications it offers plenty, but for very large applications, by the nature of flexibility, it can become disorganized if the code is not structured and reviewed well.
+
+[Zustand vs Redux](https://dev.to/ingeniouswebster/the-battle-of-state-management-redux-vs-zustand-6k4)
 
 ### React Map GL and Maplibre
 
-These are free and open source map libraries for the map components in this app. They are easy to use with exisiting react functions like hooks and props/state cycles. They're also pretty customizable.
+These are free and open source map libraries for the map components in this app. They are easy to use with exisiting react functions like hooks and props/state cycles. They're also pretty customizable. [React-Map-GL](https://visgl.github.io/react-map-gl/) [MapLibre](https://maplibre.org/)
 
 ### Turf
 
-This was added to help with the Geospatial overlays on the maps. Specifically, this is the radius circle on the map used in this application. It's really modular and customizable, so it can be used for other features if the application grows, such as drawing a boundary.
+This was added to help with the Geospatial overlays on the maps. Specifically, this is the radius circle on the map used in this application. It's really modular and customizable, so it can be used for other features if the application grows, such as drawing a boundary. [Turf](https://turfjs.org/)
 
 ## API
 
@@ -115,6 +117,8 @@ I chose maptiler because it's open-source and free within their limits. It pairs
 It was suggested in the PDF document, so I figured they wanted candidates to use this specifically if they could.
 
 It does not use traditional pagination, so it requires a little bit of a setup for this kind of behavior.
+
+[Foursquare Places API](https://docs.foursquare.com/developer/reference/places-api-overview)
 
 ## Folder Structure
 
@@ -179,6 +183,14 @@ There is a lot of room for CSS/UI improvements. It's mostly responsive, but some
 
 ## Future Improvements
 
+### General Improvements
+
 - Feature: Add dropdown list for a user to select a restaurant by genre incase they aren't filling creative. Proposed Implmentation: Add new [categories](https://docs.foursquare.com/data-products/docs/categories) endpoint, fetch and populate the select dropdown with the restaurant sub-categories.
 - Tests: Add more comprehensive and meaningful tests across the application
 - Feature: Consider some type of route/navigation for the maps. [react-map-gl-directions](https://github.com/neeleshbisht99/react-map-gl-directions) is quite outdated but it's possible with investigation an alternative can be found. [OpenRouteService](https://openrouteservice.org/) is open-source and free. Others such as Google and Mapbox are paid.
+
+### Super Strech Goals
+
+- User System: Signup, authentication, save favorite locations, rate restaurants.
+- [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN): Implement DBSCAN algorithm on a downloaded set of restaurants to help find restaurant clusters that can be used with a heatmap overlay. This can help users see "hotpots" of restaurant (to their liking) areas that they can go to and explore in person.
+- (assumes user system): Implement Recommender System: Use [KNN](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) as a starting point and extend from there.
