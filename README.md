@@ -188,6 +188,8 @@ There is a lot of room for CSS/UI improvements. It's mostly responsive, but some
 - Feature: Add dropdown list for a user to select a restaurant by genre incase they aren't filling creative. Proposed Implmentation: Add new [categories](https://docs.foursquare.com/data-products/docs/categories) endpoint, fetch and populate the select dropdown with the restaurant sub-categories.
 - Tests: Add more comprehensive and meaningful tests across the application
 - Feature: Consider some type of route/navigation for the maps. [react-map-gl-directions](https://github.com/neeleshbisht99/react-map-gl-directions) is quite outdated but it's possible with investigation an alternative can be found. [OpenRouteService](https://openrouteservice.org/) is open-source and free. Others such as Google and Mapbox are paid.
+- Improvement: Better error handling. Possibly a toast notification for errors.
+- Feature: Storybook for component visulzations/documentation
 
 ### Super Strech Goals
 
