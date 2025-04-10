@@ -84,12 +84,6 @@ const Photo = styled.img`
   z-index: 1;
 `;
 
-const DetailsRow = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-evenly;
-`;
-
 const Row = styled.div`
   display: flex;
   flex-direction: row;
@@ -202,33 +196,6 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
             </Details>
           </Column>
         </Row>
-        {/* <DetailsRow>
-          {photo && (
-            <Photo
-              key={photo?.prefix ?? ''}
-              src={
-                photo
-                  ? `${photo.prefix}100x100${photo.suffix}`
-                  : 'no_img_available.png'
-              }
-            />
-          )}
-          <Details>
-            {distance && <DetailText>{distance}m</DetailText>}
-            {price && <DetailText>{getPriceText(price)}</DetailText>}
-            <TagRow>
-              {!isTooltip &&
-                categories?.length &&
-                categories.map((category: Category, index: number) => (
-                  <Tag
-                    key={`${category?.id}-${index}`}
-                    label={category?.short_name}
-                  />
-                ))}
-            </TagRow>
-            {hours && <Hours hours={hours} />}
-          </Details>
-        </DetailsRow> */}
       </InnerContainer>
     </OuterContainer>
   );

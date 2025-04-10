@@ -43,7 +43,7 @@ const InteractiveMap: FC = () => {
     const radiusInKm = radius / 1000;
     const options = { steps: 64, units: 'kilometers' as turf.Units };
     return turf.circle(center, radiusInKm, options);
-  }, [latitude, longitude, radius]);
+  }, [radius]);
 
   const handleToggleSwitch = () => {
     setShowCategories(!showCategories);
