@@ -2,16 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ButtonContainer = styled.button`
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
   background-color: ${({ theme }) => theme.background || '#fff'};
   border: 1px solid ${({ theme }) => theme.highlight || '#ccc'};
   border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
   color: ${({ theme }) => theme.font || '#000'};
   cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  justify-content: center;
+  margin-left: 5px;
+  padding: 0.5rem 1rem;
 `;
 
 interface ButtonProps {
