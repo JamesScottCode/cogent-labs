@@ -36,7 +36,7 @@ const LazyImage: FC<{ src: string; alt?: string }> = ({ src, alt }) => {
         </Skeleton>
       )}
       <StyledImage
-        src={src}
+        src={src ?? null}
         alt={alt ?? ''}
         style={{ display: loaded ? 'block' : 'none' }}
         onLoad={() => setLoaded(true)}

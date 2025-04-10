@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import { FC, useMemo, useRef, useState } from 'react';
 import Map, { NavigationControl, Source, Layer } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as turf from '@turf/turf';
@@ -7,6 +7,7 @@ import { usePlacesStore } from '../../stores/placesStore';
 import { defaultCoordinates } from '../../consts/map';
 import { Place } from '../../types/places';
 import HoverableMarker from '../atoms/hoverableMarker';
+import ToggleSwitch from '../atoms/toggleSwitch';
 
 const Container = styled.div`
   border-radius: 8px;
@@ -15,8 +16,15 @@ const Container = styled.div`
   position: relative;
   width: 100%;
 `;
+const ToggleContainer = styled.div`
+  left: 15px;
+  position: absolute;
+  top: 15px;
+  z-index: 10;
+`;
 
-const InteractiveMap: React.FC = () => {
+const InteractiveMap: FC = () => {
+  const [showCategories, setShowCategories] = useState(false);
   const { radius, restaurants } = usePlacesStore();
   const mapRef = useRef<any>(null);
 
@@ -37,8 +45,15 @@ const InteractiveMap: React.FC = () => {
     return turf.circle(center, radiusInKm, options);
   }, [latitude, longitude, radius]);
 
+  const handleToggleSwitch = () => {
+    setShowCategories(!showCategories);
+  };
+
   return (
     <Container>
+      <ToggleContainer>
+        <ToggleSwitch checked={showCategories} onChange={handleToggleSwitch} />
+      </ToggleContainer>
       <Map
         mapLib={import('maplibre-gl')}
         initialViewState={{ latitude, longitude, zoom: 15 }}
@@ -80,7 +95,7 @@ const InteractiveMap: React.FC = () => {
               key={restaurant.fsq_id}
               mapRef={mapRef}
               restaurant={restaurant}
-              showCategory={false} // TODO: Add switch for this
+              showCategory={showCategories}
             />
           );
         })}

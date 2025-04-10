@@ -31,7 +31,6 @@ const MarkerWrapper = styled.div<{
   position: relative;
   z-index: 10001;
   padding: ${({ $showCategory }) => ($showCategory ? '2px 2px 6px 2px' : '0')};
-  padding: 0;
   color: white;
 `;
 
