@@ -57,7 +57,7 @@ const ResultsList: React.FC = () => {
   const selectedRestaurantId = selectedRestaurant?.fsq_id;
 
   // TODO: Remove hardcoded items here
-  const query = ''; // TODO: Implement query with search text and/or category select
+  const query = 'restaurant'; // TODO: Implement query with search text and/or category select
   const ll = createLL(latitude, longitude); // TODO: Make a movable marker for locations... for now just leave at cogent labs coords
 
   // Memoize search parameters for change detection.
