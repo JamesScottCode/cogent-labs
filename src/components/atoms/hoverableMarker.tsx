@@ -16,22 +16,22 @@ interface HoverableMarkerProps {
   mapRef: React.RefObject<any>;
   showCategory?: boolean;
 }
-
+// https://github.com/visgl/react-map-gl/issues/516
 const MarkerWrapper = styled.div<{
   $isHovered: boolean;
   $showCategory: boolean;
 }>`
   background: ${({ theme, $isHovered }) =>
     $isHovered ? theme.highlight : 'grey'};
-  width: ${({ $showCategory }) => ($showCategory ? '100%' : '15px')};
-  height: 15px;
-  border-radius: ${({ $showCategory }) => ($showCategory ? '8px' : '50%')};
   border: 2px solid white;
-  cursor: pointer;
-  position: relative;
-  z-index: 10001;
-  padding: ${({ $showCategory }) => ($showCategory ? '2px 2px 6px 2px' : '0')};
+  border-radius: ${({ $showCategory }) => ($showCategory ? '8px' : '50%')};
   color: white;
+  cursor: pointer;
+  height: 15px;
+  padding: ${({ $showCategory }) => ($showCategory ? '2px 2px 6px 2px' : '0')};
+  position: relative;
+  width: ${({ $showCategory }) => ($showCategory ? '100%' : '15px')};
+  z-index: ${({ $isHovered }) => ($isHovered ? '2000 !important' : '1001')};
 `;
 
 const Tooltip = styled.div<{ $showCategory: boolean }>`
