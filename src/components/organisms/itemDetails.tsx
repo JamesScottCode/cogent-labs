@@ -55,6 +55,8 @@ const ItemDetails: FC = () => {
   const { hours, menu, name, tel, photos, social_media, tips, website } =
     selectedRestaurant;
 
+  const { facebook_id, instagram, twitter } = social_media;
+
   const { is_local_holiday, open_now } = hours;
 
   const displayablePhotos: Array<{ alt: string; src: string }> = photos?.map(
@@ -96,16 +98,14 @@ const ItemDetails: FC = () => {
           <Link href={menu}>{menu}</Link>
         </Row>
       )}
-      {Object.entries(social_media).length && (
+      {(facebook_id || instagram || twitter) && (
         <Row>
           <Label $fontWeight="600">Social Media: </Label>
           <Socials />
         </Row>
       )}
-      {displayablePhotos && <Carousel images={displayablePhotos} />}
-      {/* </Row> */}
-      <Row />
-      {tips && (
+      {displayablePhotos?.length > 0 && <Carousel images={displayablePhotos} />}
+      {tips?.length > 0 && (
         <Row>
           <Reviews />
         </Row>
