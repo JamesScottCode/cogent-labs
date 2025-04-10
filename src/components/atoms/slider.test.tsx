@@ -1,6 +1,12 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React, { PropsWithChildren } from 'react';
 import Slider from './slider';
+import { ScreenSizeProvider } from '../../contexts/screenSizeContext';
+
+const Wrapper: React.FC<PropsWithChildren<{}>> = ({ children }) => (
+  <ScreenSizeProvider>{children}</ScreenSizeProvider>
+);
 
 describe('Slider', () => {
   const defaultProps = {
@@ -17,21 +23,33 @@ describe('Slider', () => {
   });
 
   it('renders the slider and displays the current value', () => {
-    render(<Slider {...defaultProps} />);
+    render(
+      <Wrapper>
+        <Slider {...defaultProps} />
+      </Wrapper>,
+    );
     expect(screen.getByText('100')).toBeInTheDocument();
     const input = screen.getByRole('slider') as HTMLInputElement;
     expect(input.value).toBe('100');
   });
 
   it('calls onChange when the slider value changes', () => {
-    render(<Slider {...defaultProps} />);
+    render(
+      <Wrapper>
+        <Slider {...defaultProps} />
+      </Wrapper>,
+    );
     const input = screen.getByRole('slider') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '120' } });
     expect(defaultProps.onChange).toHaveBeenCalledWith(120);
   });
 
   it('calls onFinished on mouse up', () => {
-    render(<Slider {...defaultProps} />);
+    render(
+      <Wrapper>
+        <Slider {...defaultProps} />
+      </Wrapper>,
+    );
     const input = screen.getByRole('slider') as HTMLInputElement;
     input.value = '130';
     fireEvent.mouseUp(input);
@@ -39,7 +57,11 @@ describe('Slider', () => {
   });
 
   it('calls onFinished on touch end', () => {
-    render(<Slider {...defaultProps} />);
+    render(
+      <Wrapper>
+        <Slider {...defaultProps} />
+      </Wrapper>,
+    );
     const input = screen.getByRole('slider') as HTMLInputElement;
     input.value = '140';
     fireEvent.touchEnd(input);
