@@ -26,7 +26,7 @@ const ToggleContainer = styled.div`
 `;
 
 const mapStyle = process.env.REACT_APP_MAPTILER_API_KEY
-  ? `https://api.maptiler.com/maps/jp-mierune-streets/style.json?key=${process.env.REACT_APP_MAPTILER_API_KEY}`
+  ? `https://api.maptiler.com/maps/jp-mierune-gray/style.json?key=${process.env.REACT_APP_MAPTILER_API_KEY}`
   : 'https://demotiles.maplibre.org/style.json';
 
 const InteractiveMap: FC = () => {
