@@ -11,7 +11,7 @@ const SocialsContainer = styled.span`
 
 const Link = styled.a`
   color: ${({ theme }) => theme.highlight || 'blue'};
-  font-size: 1rem;
+  font-size: 0.8rem;
   text-align: left;
   margin-right: 10px;
 `;
