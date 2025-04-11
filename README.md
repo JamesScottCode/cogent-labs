@@ -168,7 +168,7 @@ cogent-labs/
 
 ## UI UX
 
-This project is loosely (or not so loosely) inspired by [Apts.jp](https://apts.jp/)
+This project is loosely (or not so loosely) inspired by [Apts.jp](https://apts.jp/search)
 The mention of a map being required and a list of restaurants immediately reminded me of this site, which follows a similar pattern, except with apartments.
 
 #### UI Improvements
@@ -189,7 +189,7 @@ There is a lot of room for CSS/UI improvements. It's mostly responsive, but some
 - Feature: Add dropdown list for a user to select a restaurant by genre incase they aren't filling creative. Proposed Implmentation: Add new [categories](https://docs.foursquare.com/data-products/docs/categories) endpoint, fetch and populate the select dropdown with the restaurant sub-categories.
 - Tests: Add more comprehensive and meaningful tests across the application
 - Feature: Consider some type of route/navigation for the maps. [react-map-gl-directions](https://github.com/neeleshbisht99/react-map-gl-directions) is quite outdated but it's possible with investigation an alternative can be found. [OpenRouteService](https://openrouteservice.org/) is open-source and free. Others such as Google and Mapbox are paid.
-- Improvement: Better error handling. Possibly a toast notification for errors.
+- ~~Improvement: Better error handling. Possibly a toast notification for errors.~~
 - Feature: Storybook for component visulzations/documentation
 - Improvement: Make a folder for each component
 - Improvement: Caching. Because of the "likey open" status effects, should be a short cache (30minutes?) time so users are disappointed by stale data
