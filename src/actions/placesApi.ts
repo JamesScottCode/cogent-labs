@@ -3,7 +3,7 @@ import { FoursquarePlacesResponse } from '../types/places';
 import { createLL } from '../utils/geo';
 import { fsqFields } from '../consts/foursquare';
 
-export async function fetchPlaces(
+export async function rawFetchPlaces(
   query: string,
   limit = 10,
   radius?: number,
@@ -57,4 +57,39 @@ export async function fetchPlaces(
   }
 
   return { results: data.results, nextCursor };
+}
+
+export let lastCall = 0;
+export let timestamps: number[] = [];
+
+export async function safeFetchPlaces(
+  query: string,
+  limit = 10,
+  radius?: number,
+  cursor?: string,
+  sort?: string,
+): Promise<{
+  results: FoursquarePlacesResponse['results'];
+  nextCursor?: string;
+}> {
+  const now = Date.now();
+
+  if (now - lastCall < 500) {
+    throw new Error('Please wait before making another request.');
+  }
+
+  timestamps = timestamps.filter((t) => t > now - 60000);
+  if (timestamps.length >= 50) {
+    throw new Error('Rate limit exceeded. Try again later.');
+  }
+
+  lastCall = now;
+  timestamps.push(now);
+
+  return rawFetchPlaces(query, limit, radius, cursor, sort);
+}
+
+export function resetRateLimiter() {
+  lastCall = 0;
+  timestamps = [];
 }

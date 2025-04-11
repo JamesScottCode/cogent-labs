@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { fetchPlaces as apiFetchPlaces } from '../actions/placesApi';
+import { safeFetchPlaces as apiFetchPlaces } from '../actions/placesApi';
 import { Place } from '../types/places';
 
 interface CurrentSearch {

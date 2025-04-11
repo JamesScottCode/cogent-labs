@@ -6,6 +6,7 @@ import ResultListItem from '../molecules/resultListItem';
 import { createLL } from '../../utils/geo';
 import { defaultCoordinates } from '../../consts/map';
 import Spinner from '../atoms/spinner';
+import { Place } from '../../types/places';
 
 const { latitude, longitude } = defaultCoordinates;
 
@@ -55,12 +56,10 @@ const ResultsList: React.FC = () => {
   } = usePlacesStore();
 
   const selectedRestaurantId = selectedRestaurant?.fsq_id;
+  const query = 'restaurant'; //TODO:  hardcoded for now
+  const ll = createLL(latitude, longitude);
 
-  // TODO: Remove hardcoded items here
-  const query = 'restaurant'; // TODO: Implement query with search text and/or category select
-  const ll = createLL(latitude, longitude); // TODO: Make a movable marker for locations... for now just leave at cogent labs coords
-
-  // Memoize search parameters for change detection.
+  // memoize search parameters for change detection.
   const searchParams = useMemo(
     () => ({ query, ll, radius }),
     [query, ll, radius],
@@ -69,6 +68,13 @@ const ResultsList: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // for rate limiting the fetch in infinite scrolling:
+  const lastFetchTimeRef = useRef(0);
+  // for scheduling a pending fetch when delay hasn't passed yet.
+  const scheduledTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
   // on mount, fetch initial results if empty.
   useEffect(() => {
     if (restaurants.length === 0) {
@@ -76,7 +82,7 @@ const ResultsList: React.FC = () => {
     }
   }, [fetchPlaces, query, restaurants.length]);
 
-  // when search parameters change, scroll the container to the top.
+  // When search parameters change, scroll the container to the top.
   useEffect(() => {
     if (
       prevSearchParams.current.query !== searchParams.query ||
@@ -101,14 +107,46 @@ const ResultsList: React.FC = () => {
   // intersection observer to load more results when scrolling.
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
+    const delay = 2000; // set delay to 2 seconds
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && nextCursor && !loading) {
-          fetchPlaces(query, limit, nextCursor);
+        // if there is no next page or we're loading, don't do anything.
+        if (!nextCursor || loading) return;
+
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          const now = Date.now();
+          const timeSinceLastFetch = now - lastFetchTimeRef.current;
+          if (timeSinceLastFetch >= delay) {
+            // enough time has passed: clear any pending timeout and fetch immediately.
+            if (scheduledTimeoutRef.current) {
+              clearTimeout(scheduledTimeoutRef.current);
+              scheduledTimeoutRef.current = null;
+            }
+            lastFetchTimeRef.current = now;
+            fetchPlaces(query, limit, nextCursor);
+          } else {
+            // not enough time has passed: schedule a fetch for when the delay is over.
+            if (!scheduledTimeoutRef.current) {
+              scheduledTimeoutRef.current = setTimeout(() => {
+                // double-check that the sentinel is still intersecting before fetching.
+                lastFetchTimeRef.current = Date.now();
+                fetchPlaces(query, limit, nextCursor);
+                scheduledTimeoutRef.current = null;
+              }, delay - timeSinceLastFetch);
+            }
+          }
+        } else {
+          // sentinel is not in view, so cancel any scheduled fetch.
+          if (scheduledTimeoutRef.current) {
+            clearTimeout(scheduledTimeoutRef.current);
+            scheduledTimeoutRef.current = null;
+          }
         }
       },
       { root: null, rootMargin: '0px', threshold: 0.1 },
     );
+
     if (sentinelRef.current) {
       observer.observe(sentinelRef.current);
     }
@@ -117,13 +155,19 @@ const ResultsList: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         observer.unobserve(sentinelRef.current);
       }
+      // cleanup any pending timeout on unmount.
+      if (scheduledTimeoutRef.current) {
+        clearTimeout(scheduledTimeoutRef.current);
+      }
     };
   }, [nextCursor, loading, fetchPlaces, query, limit]);
+
+  if (restaurants?.length <= 0) return <></>; // TODO: Add some kind of placeholder for no restaurants.
 
   return (
     <Container ref={containerRef}>
       <ItemsContainer $screenSize={screenSize}>
-        {restaurants.map((restaurant) => (
+        {restaurants.map((restaurant: Place) => (
           <ResultListItem
             data={restaurant}
             id={restaurant.fsq_id}

@@ -1,18 +1,16 @@
-import { fetchPlaces } from './placesApi';
 import { fsqFields } from '../consts/foursquare';
 import { fakeApiResponse } from '../consts/fakeApiResponse';
+import { safeFetchPlaces, resetRateLimiter } from './placesApi';
 
 jest.mock('../utils/geo', () => ({
   createLL: (lat: number, lng: number) => `${lat},${lng}`,
 }));
 
-// A more realistic fake response object based on an actual Foursquare response.
-// Not every field is required for our tests, only the ones we might expect in our "data.results".
-
 describe('fetchPlaces', () => {
   beforeEach(() => {
-    // Reset the fetch mock before each test.
     global.fetch = jest.fn();
+
+    resetRateLimiter();
   });
 
   afterEach(() => {
@@ -41,7 +39,7 @@ describe('fetchPlaces', () => {
       },
     });
 
-    const result = await fetchPlaces('food');
+    const result = await safeFetchPlaces('food');
     expect(global.fetch).toHaveBeenCalledTimes(1);
 
     // verify that the returned results match the fake data.
@@ -64,7 +62,7 @@ describe('fetchPlaces', () => {
       },
     });
 
-    const result = await fetchPlaces('food');
+    const result = await safeFetchPlaces('food');
     expect(result).toEqual({
       results: fakeApiResponse.results,
       nextCursor: undefined,
@@ -78,7 +76,9 @@ describe('fetchPlaces', () => {
       statusText: 'Internal Server Error',
     });
 
-    await expect(fetchPlaces('food')).rejects.toThrow('Failed to fetch places');
+    await expect(safeFetchPlaces('food')).rejects.toThrow(
+      'Failed to fetch places',
+    );
   });
 
   it('includes radius and sort parameters in the API call', async () => {
@@ -97,7 +97,7 @@ describe('fetchPlaces', () => {
     });
 
     // call fetchPlaces with radius and sort parameters
-    await fetchPlaces('coffee', 10, 500, undefined, 'rating');
+    await safeFetchPlaces('coffee', 10, 500, undefined, 'rating');
 
     // capture the URL that global.fetch was called with
     const fetchCall = (global.fetch as jest.Mock).mock.calls[0][0];
