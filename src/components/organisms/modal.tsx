@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useModalStore } from '../../stores/layoutStore';
+import { useLayoutStore } from '../../stores/layoutStore';
 import { usePlacesStore } from '../../stores/placesStore';
 
 const ModalOverlay = styled.div`
@@ -44,7 +44,7 @@ const Title = styled.h2`
 
 const ModalContainer: React.FC = () => {
   const { setSelectedRestaurant } = usePlacesStore();
-  const { isOpen, modalContent, closeModal, title } = useModalStore();
+  const { isOpen, modalContent, closeModal, title } = useLayoutStore();
 
   const handleClose = () => {
     closeModal(() => {

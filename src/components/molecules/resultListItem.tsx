@@ -7,7 +7,7 @@ import Tag from '../atoms/tag';
 import StarRating from '../atoms/starRating';
 import OpenStatus from '../atoms/openStatus';
 import ItemDetails from '../organisms/itemDetails';
-import { useModalStore } from '../../stores/layoutStore';
+import { useLayoutStore } from '../../stores/layoutStore';
 
 const OuterContainer = styled.div<{ $isToolTip?: boolean }>`
   box-sizing: border-box;
@@ -122,7 +122,7 @@ interface ResultListItemProps {
 }
 
 const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
-  const { openModal } = useModalStore();
+  const { openModal } = useLayoutStore();
   const { hoveredRestaurantId, setHoveredRestaurantId, setSelectedRestaurant } =
     usePlacesStore();
   const {

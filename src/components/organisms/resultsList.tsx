@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useScreenSize, ScreenSize } from '../../contexts/screenSizeContext';
 import { usePlacesStore } from '../../stores/placesStore';
@@ -37,7 +37,7 @@ const ItemsContainer = styled.div<{ $screenSize: ScreenSize }>`
     itemsContainerColumnNum($screenSize)};
 `;
 
-// Sentinel element for triggering next page load.
+// sentinel element for triggering next page load.
 const Sentinel = styled.div`
   height: 1px;
 `;
@@ -56,7 +56,7 @@ const ResultsList: React.FC = () => {
   } = usePlacesStore();
 
   const selectedRestaurantId = selectedRestaurant?.fsq_id;
-  const query = 'restaurant'; //TODO:  hardcoded for now
+  const query = 'restaurant'; //TODO: hardcoded for now
   const ll = createLL(latitude, longitude);
 
   // memoize search parameters for change detection.
@@ -74,6 +74,16 @@ const ResultsList: React.FC = () => {
   const scheduledTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+
+  // delay start of infinite scroll when the component initially loads
+  const [infiniteScrollEnabled, setInfiniteScrollEnabled] = useState(false);
+  useEffect(() => {
+    const initialDelay = 2000;
+    const timer = setTimeout(() => {
+      setInfiniteScrollEnabled(true);
+    }, initialDelay);
+    return () => clearTimeout(timer);
+  }, []);
 
   // on mount, fetch initial results if empty.
   useEffect(() => {
@@ -107,9 +117,12 @@ const ResultsList: React.FC = () => {
   // intersection observer to load more results when scrolling.
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const delay = 2000; // set delay to 2 seconds
+    const rateLimitDelay = 2000; // rate limiting delay of 2 seconds
     const observer = new IntersectionObserver(
       (entries) => {
+        // Check if infinite scrolling is enabled
+        if (!infiniteScrollEnabled) return;
+
         // if there is no next page or we're loading, don't do anything.
         if (!nextCursor || loading) return;
 
@@ -117,8 +130,8 @@ const ResultsList: React.FC = () => {
         if (entry.isIntersecting) {
           const now = Date.now();
           const timeSinceLastFetch = now - lastFetchTimeRef.current;
-          if (timeSinceLastFetch >= delay) {
-            // enough time has passed: clear any pending timeout and fetch immediately.
+          if (timeSinceLastFetch >= rateLimitDelay) {
+            // If a scheduled fetch exists, clear it.
             if (scheduledTimeoutRef.current) {
               clearTimeout(scheduledTimeoutRef.current);
               scheduledTimeoutRef.current = null;
@@ -126,18 +139,15 @@ const ResultsList: React.FC = () => {
             lastFetchTimeRef.current = now;
             fetchPlaces(query, limit, nextCursor);
           } else {
-            // not enough time has passed: schedule a fetch for when the delay is over.
             if (!scheduledTimeoutRef.current) {
               scheduledTimeoutRef.current = setTimeout(() => {
-                // double-check that the sentinel is still intersecting before fetching.
                 lastFetchTimeRef.current = Date.now();
                 fetchPlaces(query, limit, nextCursor);
                 scheduledTimeoutRef.current = null;
-              }, delay - timeSinceLastFetch);
+              }, rateLimitDelay - timeSinceLastFetch);
             }
           }
         } else {
-          // sentinel is not in view, so cancel any scheduled fetch.
           if (scheduledTimeoutRef.current) {
             clearTimeout(scheduledTimeoutRef.current);
             scheduledTimeoutRef.current = null;
@@ -155,12 +165,11 @@ const ResultsList: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         observer.unobserve(sentinelRef.current);
       }
-      // cleanup any pending timeout on unmount.
       if (scheduledTimeoutRef.current) {
         clearTimeout(scheduledTimeoutRef.current);
       }
     };
-  }, [nextCursor, loading, fetchPlaces, query, limit]);
+  }, [nextCursor, loading, fetchPlaces, query, limit, infiniteScrollEnabled]);
 
   if (restaurants?.length <= 0) return <></>; // TODO: Add some kind of placeholder for no restaurants.
 

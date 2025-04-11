@@ -1,7 +1,16 @@
 import { ReactNode } from 'react';
 import { create } from 'zustand';
 
-interface ModalState {
+interface Toast {
+  message: string;
+  visible: boolean;
+  isError: boolean;
+}
+
+interface LayoutState {
+  toast: Toast;
+  openToast: ({ message, visible, isError }: Toast) => void;
+  closeToast: () => void;
   isOpen: boolean;
   modalContent: ReactNode | null;
   openModal: (content: ReactNode, title?: string) => void;
@@ -9,7 +18,22 @@ interface ModalState {
   title?: string;
 }
 
-export const useModalStore = create<ModalState>((set) => ({
+export const useLayoutStore = create<LayoutState>((set, get) => ({
+  toast: {
+    message: '',
+    visible: false,
+    isError: false,
+  },
+  openToast: ({ message, visible, isError }) => {
+    set({ toast: { message, visible, isError } });
+
+    setTimeout(() => {
+      get().closeToast();
+    }, 3000);
+  },
+  closeToast: () => {
+    set({ toast: { message: '', visible: false, isError: false } });
+  },
   isOpen: false,
   modalContent: null,
   openModal: (content: ReactNode, title?: string) =>

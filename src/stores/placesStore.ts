@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { safeFetchPlaces as apiFetchPlaces } from '../actions/placesApi';
 import { Place } from '../types/places';
+import { useLayoutStore } from './layoutStore';
 
 interface CurrentSearch {
   query: string;
@@ -73,6 +74,14 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
       return random;
     } catch (error: any) {
       set({ error: error.message || 'error occurred', loading: false });
+
+      useLayoutStore.getState().openToast({
+        message:
+          error.message || 'Error occurred while fetching a random restaurant',
+        visible: true,
+        isError: true,
+      });
+
       return null;
     }
   },
@@ -117,6 +126,11 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
       }
     } catch (error: any) {
       set({ error: error.message || 'error occurred', loading: false });
+      useLayoutStore.getState().openToast({
+        message: error.message || 'Error occurred while fetching restaurants',
+        visible: true,
+        isError: true,
+      });
     }
   },
   setSelectedRestaurant: async (id: string | null) => {

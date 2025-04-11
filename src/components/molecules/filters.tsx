@@ -6,7 +6,7 @@ import Slider from '../atoms/slider';
 import Search from '../atoms/search';
 import SortOptions from '../atoms/sort';
 import ThemedButton from '../atoms/button';
-import { useModalStore } from '../../stores/layoutStore';
+import { useLayoutStore } from '../../stores/layoutStore';
 import ItemDetails from '../organisms/itemDetails';
 
 const Container = styled.div<{ $screenSize: ScreenSize }>`
@@ -28,7 +28,7 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
 const Filters: FC = () => {
   const { getRandomRestaurant, sort, radius, setRadius, limit, fetchPlaces } =
     usePlacesStore();
-  const { openModal } = useModalStore();
+  const { openModal } = useLayoutStore();
   const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
 
@@ -43,7 +43,6 @@ const Filters: FC = () => {
   };
 
   const handleGetRandomRestaurant = async () => {
-    console.log('handleGetRandomRestaurant');
     const restaurant = await getRandomRestaurant();
     if (restaurant) {
       openModal(<ItemDetails />);

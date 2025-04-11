@@ -1,10 +1,10 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import AppProviders from './contexts/providers';
 import Home from './components/pages/home';
-import { usePlacesStore } from './stores/placesStore';
 import ModalContainer from './components/organisms/modal';
+import Toast from './components/atoms/toast';
 
 export const AppContainer = styled.div`
   background: ${({ theme }) => theme.background || '#ffffff'};
@@ -12,16 +12,10 @@ export const AppContainer = styled.div`
 `;
 
 const App: FC = () => {
-  const { fetchPlaces } = usePlacesStore();
-
-  // Load some places to help with developement
-  useEffect(() => {
-    fetchPlaces();
-  }, [fetchPlaces]);
-
   return (
     <AppProviders>
       <AppContainer>
+        <Toast />
         <ModalContainer />
         <Home />
       </AppContainer>

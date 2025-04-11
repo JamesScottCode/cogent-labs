@@ -4,7 +4,7 @@ import { headerHeight } from '../../consts/theme';
 import { useScreenSize } from '../../contexts/screenSizeContext';
 import Filters from '../molecules/filters';
 import ThemedButton from '../atoms/button';
-import { useModalStore } from '../../stores/layoutStore';
+import { useLayoutStore } from '../../stores/layoutStore';
 
 const HeaderWrapper = styled.header<{ $headerHeight: number }>`
   position: relative;
@@ -42,7 +42,7 @@ const Header: React.FC<{ title?: string }> = ({
   title = 'Restaurant Finder',
 }) => {
   const { screenSize } = useScreenSize();
-  const { openModal } = useModalStore();
+  const { openModal } = useLayoutStore();
 
   return (
     <HeaderWrapper $headerHeight={headerHeight}>
