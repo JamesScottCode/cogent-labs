@@ -171,7 +171,7 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
         </TitleRow>
         <Row>
           <Column>
-            {photo && (
+            {photoSrc && (
               <Photo
                 alt={`${name}-${photo?.prefix}`}
                 key={photo?.prefix ?? ''}
