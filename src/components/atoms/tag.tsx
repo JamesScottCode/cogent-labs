@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 interface TagProps {
@@ -17,7 +17,7 @@ const TagWrapper = styled.span<{ color: string }>`
   width: fit-content;
 `;
 
-const Tag: React.FC<TagProps> = ({ label }) => (
+const Tag: FC<TagProps> = ({ label }) => (
   <TagWrapper color="#ffffff">{label}</TagWrapper>
 );
 

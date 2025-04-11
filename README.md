@@ -21,6 +21,7 @@ A demo can be found [here](https://cogentlabs.netlify.app/ 'Go to demo').
 - [UI/UX](#ui-ux)
 - [Issues](#issues)
 - [Future Improvements](#future-improvements)
+- [Notes](#notes)
 
 ## Uses
 
@@ -190,9 +191,15 @@ There is a lot of room for CSS/UI improvements. It's mostly responsive, but some
 - Feature: Consider some type of route/navigation for the maps. [react-map-gl-directions](https://github.com/neeleshbisht99/react-map-gl-directions) is quite outdated but it's possible with investigation an alternative can be found. [OpenRouteService](https://openrouteservice.org/) is open-source and free. Others such as Google and Mapbox are paid.
 - Improvement: Better error handling. Possibly a toast notification for errors.
 - Feature: Storybook for component visulzations/documentation
+- Improvement: Make a folder for each component
 
 ### Super Strech Goals
 
 - User System: Signup, authentication, save favorite locations, rate restaurants.
 - [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN): Implement DBSCAN algorithm on a downloaded set of restaurants to help find restaurant clusters that can be used with a heatmap overlay. This can help users see "hotpots" of restaurant (to their liking) areas that they can go to and explore in person.
 - (assumes user system): Implement Recommender System: Use [KNN](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) as a starting point and extend from there.
+
+## Notes
+
+- The map background uses the free tier of maptiler. If the request limit is hit, it will default to the demo map. The demo map has virtually no detail so it will look like a solid background.
+- Due to being a takehome project, this project doesn't have full test coverage, ad-hoc testing and probably contains bugs around edges cases. More testing in general is needed.
