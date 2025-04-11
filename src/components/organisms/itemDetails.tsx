@@ -8,6 +8,7 @@ import Carousel from '../molecules/carousel';
 import Reviews from '../molecules/reviews';
 import Socials from '../molecules/socials';
 import StaticMap from '../molecules/staticMap';
+import StarRating from '../atoms/starRating';
 
 const Container = styled.div`
   display: flex;
@@ -61,6 +62,7 @@ const ItemDetails: FC = () => {
     name,
     tel,
     photos,
+    rating,
     social_media,
     tips,
     website,
@@ -84,6 +86,7 @@ const ItemDetails: FC = () => {
 
   return (
     <Container>
+      {rating && <StarRating rating={rating} />}
       <Row $align="center">
         <Title>{name}</Title>
       </Row>
