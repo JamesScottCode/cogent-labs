@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import { ScreenSize, useScreenSize } from '../../contexts/screenSizeContext';
 import { usePlacesStore } from '../../stores/placesStore';
@@ -24,22 +24,19 @@ const Container = styled.div<{ $screenSize: ScreenSize }>`
         : 'auto'};
 `;
 
-// TODO(BUG): If at end of a list, then sort, fetches new list, but will be at bottom of scroll, so lots of loads
 const Filters: FC = () => {
-  const { getRandomRestaurant, sort, radius, setRadius, limit, fetchPlaces } =
+  const { getRandomRestaurant, fetchPlaces, currentSearch, setCurrentSearch } =
     usePlacesStore();
+  const { radius, query } = currentSearch;
   const { openModal } = useLayoutStore();
-  const [searchText, setSearchText] = useState('');
   const { screenSize } = useScreenSize();
 
   const handleSubmit = () => {
-    const query = searchText ?? 'restaurant';
-    fetchPlaces(query, limit, undefined, sort);
+    fetchPlaces();
   };
 
   const onSliderFinished = () => {
-    const query = searchText ?? 'restaurant';
-    fetchPlaces(query, limit);
+    fetchPlaces();
   };
 
   const handleGetRandomRestaurant = async () => {
@@ -52,9 +49,9 @@ const Filters: FC = () => {
   return (
     <Container $screenSize={screenSize}>
       <Search
-        value={searchText}
+        value={query}
         onChange={(e) => {
-          setSearchText(e.target.value);
+          setCurrentSearch({ query: e.target.value });
         }}
         onSubmit={handleSubmit}
         placeholder="Search..."
@@ -63,7 +60,7 @@ const Filters: FC = () => {
       <ThemedButton onClick={handleGetRandomRestaurant} text="Random" />
       <Slider
         value={radius}
-        onChange={setRadius}
+        onChange={(e) => setCurrentSearch({ radius: e })}
         onFinished={onSliderFinished}
       />
     </Container>

@@ -46,49 +46,49 @@ const Sentinel = styled.div`
 const ResultsList: React.FC = () => {
   const { screenSize } = useScreenSize();
   const {
-    radius,
+    currentSearch,
     restaurants,
     loading,
     error,
     selectedRestaurant,
     nextCursor,
     fetchPlaces,
-    limit,
   } = usePlacesStore();
 
+  const { query, radius } = currentSearch;
   const selectedRestaurantId = selectedRestaurant?.fsq_id;
-  const query = 'restaurant'; // TODO: hardcoded for now.
   const ll = createLL(latitude, longitude);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // memoize search parameters for efficient change detection.
+  // memoize search parameters for change detection
   const searchParams = useMemo(
     () => ({ query, ll, radius }),
     [query, ll, radius],
   );
   const prevSearchParams = useRef(searchParams);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const infiniteScrollEnabled = useDelayedToggle(false, 2000);
 
   useEffect(() => {
     if (restaurants.length === 0) {
-      fetchPlaces(query);
+      fetchPlaces();
     }
-  }, [fetchPlaces, query, restaurants.length]);
+  }, [fetchPlaces, restaurants.length]);
 
-  // scroll container to top when search parameters change.
+  // scroll to top if query, radius, or location changes
   useEffect(() => {
+    const prev = prevSearchParams.current;
     if (
-      prevSearchParams.current.query !== searchParams.query ||
-      prevSearchParams.current.ll !== searchParams.ll ||
-      prevSearchParams.current.radius !== searchParams.radius
+      prev.query !== searchParams.query ||
+      prev.ll !== searchParams.ll ||
+      prev.radius !== searchParams.radius
     ) {
       containerRef.current?.scrollTo(0, 0);
     }
     prevSearchParams.current = searchParams;
   }, [searchParams]);
 
-  // scroll the corresponding list item into view when a map marker is selected.
+  // scroll to selected item
   useEffect(() => {
     if (selectedRestaurantId) {
       const element = document.getElementById(selectedRestaurantId);
@@ -96,20 +96,18 @@ const ResultsList: React.FC = () => {
     }
   }, [selectedRestaurantId]);
 
-  // use the custom infinite scroll hook.
-  // when the sentinel is intersecting, it triggers the callback (fetchPlaces).
+  // infite scroll handler
   const sentinelRef = useInfiniteScroll(
     () => {
-      // ensure there is a next page and we're not already loading.
       if (nextCursor && !loading) {
-        fetchPlaces(query, limit, nextCursor);
+        fetchPlaces(nextCursor);
       }
     },
     infiniteScrollEnabled,
     { delay: 2000, threshold: 0.1 },
   );
 
-  if (restaurants.length <= 0) return <></>; // TODO: Add a skeleton.
+  if (restaurants.length <= 0) return <></>; // TODO: Add skeleton
 
   return (
     <Container ref={containerRef}>
@@ -123,7 +121,6 @@ const ResultsList: React.FC = () => {
         ))}
       </ItemsContainer>
       {loading && <Spinner />}
-      {/* TODO: Add a skeleton for when no restaurants error */}
       {error && <div>Error loading restaurants: {error}</div>}
       <Sentinel ref={sentinelRef} data-testid="sentinel" />
     </Container>

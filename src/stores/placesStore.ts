@@ -10,18 +10,13 @@ interface CurrentSearch {
 }
 
 interface PlacesStore {
-  sort: string;
-  setSort: (sort: string) => void;
-  query: string;
-  setQuery: (query: string) => void;
+  currentSearch: CurrentSearch;
+  setCurrentSearch: (params: Partial<CurrentSearch>) => void;
   limit: number;
-  radius: number;
-  setRadius: (radius: number) => void;
   restaurants: Place[];
   loading: boolean;
   error: string | null;
   nextCursor: string | null;
-  currentSearch?: CurrentSearch;
   getRandomRestaurant: () => Promise<Place | null>;
   fetchPlaces: (
     query?: string,
@@ -36,29 +31,36 @@ interface PlacesStore {
 }
 
 export const usePlacesStore = create<PlacesStore>((set, get) => ({
-  sort: 'relevance',
-  setSort: (sort: string) => set({ sort }),
-  query: 'restaurant',
-  setQuery: (query: string) => set({ query }),
+  currentSearch: {
+    query: 'restaurant',
+    radius: 1000,
+    sort: 'relevance',
+  },
+  setCurrentSearch: (params) =>
+    set((state) => ({
+      currentSearch: {
+        ...state.currentSearch,
+        ...params,
+      },
+    })),
   limit: 10,
-  radius: 1000,
-  setRadius: (radius: number) => set({ radius }),
   restaurants: [],
   loading: false,
   error: null,
   nextCursor: null,
-  currentSearch: undefined,
   hoveredRestaurantId: '',
   selectedRestaurant: null,
+
   getRandomRestaurant: async () => {
     set({ loading: true, error: null });
     try {
-      const { radius } = get();
+      const { currentSearch } = get();
       const { results } = await apiFetchPlaces(
-        'restaurant',
+        currentSearch.query,
         50,
-        radius,
+        currentSearch.radius,
         undefined,
+        currentSearch.sort,
       );
 
       if (!results.length) {
@@ -74,26 +76,22 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
       return random;
     } catch (error: any) {
       set({ error: error.message || 'error occurred', loading: false });
-
       useLayoutStore.getState().openToast({
         message:
           error.message || 'Error occurred while fetching a random restaurant',
         visible: true,
         isError: true,
       });
-
       return null;
     }
   },
-  fetchPlaces: async (
-    query = 'restaurant', // Default query if none is provided
-    limit = 10,
-    cursor,
-    sort,
-  ) => {
+
+  fetchPlaces: async (cursor?: string) => {
     set({ loading: true, error: null });
     try {
-      const { radius, restaurants, currentSearch } = get();
+      const { currentSearch, restaurants, limit } = get();
+      const { query, radius, sort } = currentSearch;
+
       const { results, nextCursor } = await apiFetchPlaces(
         query,
         limit,
@@ -101,29 +99,15 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
         cursor,
         sort,
       );
-      // Determine if this is a continuation of the same search (pagination)
-      const isSameSearch =
-        currentSearch &&
-        currentSearch.query === query &&
-        currentSearch.radius === radius &&
-        currentSearch.sort === sort;
+
+      const isSameSearch = cursor != null; // if cursor exists, this is pagination
       const shouldAppend = Boolean(cursor && isSameSearch);
 
-      if (shouldAppend) {
-        set({
-          restaurants: [...restaurants, ...results],
-          loading: false,
-          nextCursor,
-          currentSearch: { query, radius, sort },
-        });
-      } else {
-        set({
-          restaurants: results,
-          loading: false,
-          nextCursor,
-          currentSearch: { query, radius, sort },
-        });
-      }
+      set({
+        restaurants: shouldAppend ? [...restaurants, ...results] : results,
+        loading: false,
+        nextCursor,
+      });
     } catch (error: any) {
       set({ error: error.message || 'error occurred', loading: false });
       useLayoutStore.getState().openToast({
@@ -133,12 +117,14 @@ export const usePlacesStore = create<PlacesStore>((set, get) => ({
       });
     }
   },
+
   setSelectedRestaurant: async (id: string | null) => {
     const { restaurants } = get();
     const selectedRestaurant =
       restaurants.find((restaurant: Place) => restaurant.fsq_id === id) || null;
     set({ selectedRestaurant });
   },
+
   setHoveredRestaurantId: (hoveredRestaurantId: string) =>
     set({ hoveredRestaurantId }),
 }));

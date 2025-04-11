@@ -31,7 +31,8 @@ const mapStyle = process.env.REACT_APP_MAPTILER_API_KEY
 
 const InteractiveMap: FC = () => {
   const [showCategories, setShowCategories] = useState(false);
-  const { radius, restaurants } = usePlacesStore();
+  const { currentSearch, restaurants } = usePlacesStore();
+  const { radius } = currentSearch;
   const mapRef = useRef<any>(null);
 
   const theme = useTheme();

@@ -21,7 +21,7 @@ const StyledSortSelect = styled.select`
 `;
 
 const SortOptions: FC = () => {
-  const { currentSearch, fetchPlaces } = usePlacesStore();
+  const { currentSearch, fetchPlaces, setCurrentSearch } = usePlacesStore();
   const sortOptions = [
     { value: 'relevance', label: 'Relevance' },
     { value: 'distance', label: 'Closest' },
@@ -29,10 +29,9 @@ const SortOptions: FC = () => {
   ];
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSort = e.target.value;
-    if (currentSearch) {
-      fetchPlaces(currentSearch.query, 10, undefined, selectedSort);
-    }
+    const newSort = e.target.value;
+    setCurrentSearch({ sort: newSort });
+    fetchPlaces();
   };
 
   return (
