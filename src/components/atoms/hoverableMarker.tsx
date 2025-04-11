@@ -12,6 +12,7 @@ interface HoverableMarkerProps {
     fsq_id: string;
     geocodes: { main: { latitude: number; longitude: number } };
     categories: Array<Category>;
+    name: string;
   };
   mapRef: React.RefObject<any>;
   showCategory?: boolean;
@@ -62,6 +63,7 @@ const HoverableMarker: React.FC<HoverableMarkerProps> = ({
       main: { latitude, longitude },
     },
     categories,
+    name,
   } = restaurant;
   const {
     hoveredRestaurantId,
@@ -99,6 +101,7 @@ const HoverableMarker: React.FC<HoverableMarkerProps> = ({
   return (
     <Marker latitude={latitude} longitude={longitude} anchor="center">
       <MarkerWrapper
+        aria-label={`View details for ${name}`}
         role="button"
         $isHovered={hoveredRestaurantId === fsq_id}
         onMouseEnter={() => setHoveredRestaurantId(fsq_id)}
