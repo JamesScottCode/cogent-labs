@@ -141,6 +141,11 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
   const { address } = location;
   const photo = photos[0];
 
+  const photoSrc =
+    photo?.prefix && photo?.suffix
+      ? `${photo.prefix}150x150${photo.suffix}`
+      : '/no_img_available.png';
+
   const handleOpenModal = () => {
     setSelectedRestaurant(fsq_id);
     openModal(<ItemDetails />);
@@ -168,12 +173,9 @@ const ResultListItem: FC<ResultListItemProps> = ({ data, isTooltip, id }) => {
           <Column>
             {photo && (
               <Photo
+                alt={`${name}-${photo?.prefix}`}
                 key={photo?.prefix ?? ''}
-                src={
-                  photo
-                    ? `${photo.prefix}100x100${photo.suffix}`
-                    : 'no_img_available.png'
-                }
+                src={photoSrc}
               />
             )}
           </Column>

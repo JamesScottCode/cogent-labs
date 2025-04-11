@@ -35,6 +35,7 @@ const Title = styled.h1`
 
 const Logo = styled.img`
   height: 45px;
+  width: 45px;
 `;
 
 const Header: React.FC<{ title?: string }> = ({
