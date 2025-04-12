@@ -50,10 +50,14 @@ export const ScreenSizeProvider: FC<ScreenSizeProviderProps> = ({
       const width = window.innerWidth;
       if (width < 600) {
         setScreenSize('mobile');
-      } else if (width < 1024) {
+      } else if (width < 1025) {
         setScreenSize('tablet');
-      } else {
+      } else if (width < 2560) {
         setScreenSize('desktop');
+      } else if (width < 3840) {
+        setScreenSize('desktop2k');
+      } else {
+        setScreenSize('desktop4k');
       }
     };
 
