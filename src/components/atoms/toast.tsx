@@ -12,21 +12,21 @@ const Container = styled.div`
 
 const ToastWrapper = styled.div<{ $isError: boolean }>`
   align-items: center;
-  color: white;
-  display: flex;
   background-color: ${({ $isError, theme }) =>
     $isError ? 'rgba(199, 0, 0, 0.83)' : theme.highlight};
-  padding: 10px 10px 10px 20px;
   border-radius: 8px;
+  color: white;
+  display: flex;
+  padding: 10px 10px 10px 20px;
 `;
 
 const CloseButton = styled.button`
-  margin-left: 10px;
   background: none;
   border: none;
   color: white;
   cursor: pointer;
   font-size: 16px;
+  margin-left: 10px;
 `;
 
 const Toast: FC = () => {
