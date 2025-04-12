@@ -2,6 +2,7 @@ import { defaultCoordinates } from '../consts/map';
 import { FoursquarePlacesResponse } from '../types/places';
 import { createLL } from '../utils/geo';
 import { fsqFields } from '../consts/foursquare';
+import { useLayoutStore } from '../stores/layoutStore';
 
 export async function rawFetchPlaces(
   query: string,
@@ -13,6 +14,18 @@ export async function rawFetchPlaces(
   results: FoursquarePlacesResponse['results'];
   nextCursor?: string;
 }> {
+  const API_KEY = process.env.REACT_APP_FOURSQUARE_API_KEY;
+  if (!API_KEY) {
+    const errorMsg =
+      'Missing Foursquare API Key. Please set REACT_APP_FOURSQUARE_API_KEY in your environment.';
+    useLayoutStore.getState().openToast({
+      message: errorMsg,
+      visible: true,
+      isError: true,
+    });
+    throw new Error(errorMsg);
+  }
+
   const { latitude, longitude } = defaultCoordinates;
   const ll = createLL(latitude, longitude);
 
@@ -36,13 +49,19 @@ export async function rawFetchPlaces(
 
   const response = await fetch(API_URL, {
     headers: {
-      Authorization: process.env.REACT_APP_FOURSQUARE_API_KEY || '',
+      Authorization: API_KEY,
       Accept: 'application/json',
     },
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch places');
+    const errorMsg = `Failed to fetch places: ${response.status} ${response.statusText}`;
+    useLayoutStore.getState().openToast({
+      message: errorMsg,
+      visible: true,
+      isError: true,
+    });
+    throw new Error(errorMsg);
   }
 
   const data = (await response.json()) as FoursquarePlacesResponse;
