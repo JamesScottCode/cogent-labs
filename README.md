@@ -71,7 +71,7 @@ The project is Dockerized so you can run everything with a single command.
 
 1. **Build and run the Docker container:**
 
-   docker-compose up --build
+   docker compose up --build
 
 2. Open your browser at http://localhost:3000 to see the application running.
 
