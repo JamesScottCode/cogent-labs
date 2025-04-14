@@ -192,7 +192,7 @@ There is a lot of room for CSS/UI improvements. It's mostly responsive, but some
 - ~~Improvement: Better error handling. Possibly a toast notification for errors.~~
 - Feature: Storybook for component visulzations/documentation
 - Improvement: Make a folder for each component
-- Improvement: Caching. Because of the "likey open" status effects, should be a short cache (30minutes?) time so users are disappointed by stale data
+- Improvement: Caching. Because of the "likey open" status effects, should be a short cache (30minutes?) time so users are disappointed by stale data. (Frontend Tanstack Query, maybe a combo or redis/nginx for a fullstack app)
 - Fix: Fallback incase API keys are provided
 
 ### Super Strech Goals
