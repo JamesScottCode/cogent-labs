@@ -39,7 +39,7 @@ A demo can be found [here](https://cogentlabs.netlify.app/ 'Go to demo').
 
 1. **Clone the repository:**
 
-   git clone https://github.com/your-username/cogent-labs.git
+   git clone https://github.com/JamesScottCode/cogent-labs.git
 
    cd cogent-labs
 
